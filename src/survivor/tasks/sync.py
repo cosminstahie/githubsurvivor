@@ -36,6 +36,7 @@ issue_attr_map = {
     'closed': 'closed_at',
     'updated': 'updated_at',
     'url': 'html_url',
+    'milestone': 'milestone.title'
     }
 
 def create_issue(github_issue):
