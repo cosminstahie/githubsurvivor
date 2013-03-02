@@ -154,6 +154,10 @@ survivor.dashboard = (function () {
             window.location = "/?reporting_unit=" + reporting_unit;
         });
 
+        $('#filters select').on('change', function(evt){
+            $(evt.currentTarget).closest('form').submit();
+        });
+
         // Refresh every 10 minutes to get latest data
         window.setTimeout(function () { window.location.reload(); }, 1000 * 60 * 10);
     });

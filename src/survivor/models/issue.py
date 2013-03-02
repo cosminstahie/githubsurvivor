@@ -9,6 +9,16 @@ class IssueQuerySet(QuerySet):
     """
     Custom issue queries.
     """
+    def milestones(self):
+        return self.only('milestone').distinct('milestone')
+
+    def labels(self):
+        label_lists = self.only('labels').distinct('labels')
+        labels = []
+        for label_list in label_lists:
+            labels += label_list
+        return set(labels)
+
     def opened_in(self, start, end):
         "Find issues opened in date range."
         return self.filter(opened__gt=start, opened__lte=end)
@@ -44,3 +54,6 @@ class Issue(Document):
     opened = DateTimeField(required=True)
     updated = DateTimeField(required=True)
     url = URLField()
+    #TODO: Make this a reference document
+    milestone = StringField()
+    labels = ListField()
