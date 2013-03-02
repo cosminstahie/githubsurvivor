@@ -7,8 +7,11 @@ import itertools
 
 import github
 
+from mongoengine import connection
+    
 from survivor import config, init
 from survivor.models import User, Issue
+
 
 def create_user(github_user):
     "Creates a `survivor.models.User` from a `github.NamedUser`."
@@ -54,6 +57,10 @@ def create_issue(github_issue):
 def sync(types, verbose=False):
     "Refresh selected collections from GitHub."
 
+    #drop database - a whole new world appears
+    current_db_instance = connection._get_db(reconnect = False)
+    connection.Connection.drop_database(current_db_instance.connection,config['db'])
+    
     auth_token = config['github.oauth_token']
     account_name, repo_name = config['github.repo'].split('/')
 
