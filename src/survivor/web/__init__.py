@@ -57,7 +57,9 @@ def dashboard():
     shuffle(developers)
 
     closed_issues = lambda u: u.closed_issues().closed_in(current_period.start, current_period.end)
-    if milestone:
+    if milestone and label_name:
+        num_closed = lambda u: len(closed_issues(u).filter(milestone=milestone, labels__contains=label_name))
+    elif milestone:
         num_closed = lambda u: len(closed_issues(u).filter(milestone=milestone))
     elif label_name:
         num_closed = lambda u: len(closed_issues(u).filter(labels__contains=label_name))
@@ -74,7 +76,9 @@ def dashboard():
     # Create an annonymous function that returns a fresh query set of filtered
     # issue every time it's called
 
-    if milestone:
+    if milestone and label_name:
+        filter_issues = lambda: Issue.objects.filter(milestone=milestone, labels__contains=label_name)
+    elif milestone:
         filter_issues = lambda: Issue.objects.filter(milestone=milestone)
     elif label_name:
         filter_issues = lambda: Issue.objects.filter(labels__contains=label_name)
