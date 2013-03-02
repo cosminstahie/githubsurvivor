@@ -17,9 +17,13 @@ def request_arg(key, default=None):
     try: return request.args[key]
     except KeyError: return default
 
-reporting_period_fns = {'week': reporting.weekly_reporting_period,
-                        'sprint': reporting.sprint_reporting_period,
-                        'month': reporting.monthly_reporting_period}
+WEEK_PERIOD = 'week'
+SPRINT_PERIOD = 'sprint'
+MONTH_PERIOD = 'month'
+
+reporting_period_fns = {WEEK_PERIOD: reporting.weekly_reporting_period,
+                        SPRINT_PERIOD: reporting.sprint_reporting_period,
+                        MONTH_PERIOD: reporting.monthly_reporting_period}
 
 def reporting_period(unit, anchor, offset=0):
     """
@@ -106,6 +110,12 @@ def dashboard():
 
     return render_template('dashboard.jinja2',
                            # Context vars
+                           reporting_periods=
+                           {
+                               WEEK_PERIOD: 'Week',
+                               SPRINT_PERIOD: 'Sprint',
+                               MONTH_PERIOD: 'Month',
+                           },
                            today=today,
                            period_label=reporting_unit,
                            milestones=Issue.objects.milestones(),

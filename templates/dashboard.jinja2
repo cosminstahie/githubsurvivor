@@ -53,16 +53,20 @@
                                         {% endif %}
                                       {% endfor %}
           </select>
+
+          Period:
+          <select name="reporting_unit">
+              {% for key, label in reporting_periods.iteritems() %}
+                {% if key == period_label %}
+              <option value="{{key}}" selected>{{label}}</options>
+                {% else %}
+              <option value="{{key}}">{{label}}</options>
+                {% endif %}
+              {% endfor %}
+          </select>
         </form>
       </span>
 
-        <input type="hidden" value="{{period_label}}" id="hid_reporting_unit" />
-          <span for="reporting_unit">Period: </span>
-          <select id="reporting_unit">
-              <option value="sprint">Sprint</value>
-              <option value="week">Week</value>
-              <option value="month">Month</value>
-          </select>
       </div>
 
     </div>
