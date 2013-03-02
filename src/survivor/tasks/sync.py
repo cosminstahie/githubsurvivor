@@ -90,7 +90,7 @@ if __name__ == '__main__':
     argparser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help='verbose output')
 
     args = argparser.parse_args()
-    types = args.model or ('users')
+    types = args.model or ('users', 'issues')
     
     init()
     sync(types, args.verbose)
