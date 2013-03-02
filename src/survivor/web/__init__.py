@@ -72,24 +72,23 @@ def dashboard():
     # FIXME: this needs some work.
     # This currently makes 3 * previous_periods (i.e. 36) separate Mongo queries
 
+    # Create an annonymous function that returns a fresh query set of filtered
+    # issue every time it's called
+    filter_issues = lambda: Issue.objects.filter(milestone=milestone,
+                                                 label_name=label_name)
+
     # Number of bugs opened/closed in each period
     opened_closed_bugs = []
     for period in reporting_periods:
-      # Filter subset by URL filters before filtering by period
-      filtered_issues = Issue.objects.filter(milestone=milestone,
-                                             label_name=label_name)
       opened_closed_bugs.append({'period': period,
-                                 'opened': len(filtered_issues.opened_in(period.start, period.end)),
-                                 'closed': len(filtered_issues.closed_in(period.start, period.end))})
+                                 'opened': len(filter_issues().opened_in(period.start, period.end)),
+                                 'closed': len(filter_issues().closed_in(period.start, period.end))})
 
     # Point-in-time open bug count
     open_bugs = []
     for period in reporting_periods:
-      # Filter subset by URL filters before filtering by period
-      filtered_issues = Issue.objects.filter(milestone=milestone,
-                                             label_name=label_name)
       open_bugs.append({'period': period,
-                        'count': len(filtered_issues.open_at(period.end))})
+                        'count': len(filter_issues().open_at(period.end))})
 
     # Close rate
     current_close_rate = opened_closed_bugs[-1]['closed'] - opened_closed_bugs[-1]['opened']
