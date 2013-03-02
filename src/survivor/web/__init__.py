@@ -39,7 +39,7 @@ def reporting_period(unit, anchor, offset=0):
 def dashboard():
     # Get filters from URL
     #TODO: Remove default milestone
-    milestone = request.args.get('milestone','SecondMilestone')
+    milestone = request.args.get('milestone')
     label_name = request.args.get('label')
 
     today = timeutils.today()
