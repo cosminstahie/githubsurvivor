@@ -63,6 +63,7 @@ def sync(types, verbose=False):
         User.drop_collection()
         # FIXME: can this come from config?
         for github_user in account.get_repo(repo_name).get_collaborators():
+            print '.',
             try:
                 user = create_user(github_user)
             except:
@@ -73,9 +74,14 @@ def sync(types, verbose=False):
     if 'issues' in types:
         Issue.drop_collection()
         repo = account.get_repo(repo_name)
-        issues = itertools.chain(repo.get_issues(state='open'),
+        try:
+            issues = itertools.chain(repo.get_issues(state='open'),
                                  repo.get_issues(state='closed'))
+        except github.GithubException as e:
+            print 'Warn: %s' % e
+            return 
         for gh_issue in issues:
+            print ',',
             try:
                 issue = create_issue(gh_issue)
             except:
