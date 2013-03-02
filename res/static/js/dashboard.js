@@ -148,6 +148,12 @@ survivor.dashboard = (function () {
 		    colours: { line: '#E63A16', area: '#5F1A0A' }
 		});
 
+        $('#reporting_unit').val($('#hid_reporting_unit').val());
+        $('#reporting_unit').on('change', function(evt){
+            var reporting_unit = $(event.currentTarget).val();
+            window.location = "/?reporting_unit=" + reporting_unit;
+        });
+
         // Refresh every 10 minutes to get latest data
         window.setTimeout(function () { window.location.reload(); }, 1000 * 60 * 10);
     });
