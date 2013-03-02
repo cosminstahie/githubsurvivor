@@ -37,24 +37,29 @@ issue_attr_map = {
     'updated': 'updated_at',
     'url': 'html_url',
     'milestone': ['milestone', 'title'],
+    'labels': 'labels',
     }
 
 def create_issue(github_issue):
     "Creates a `survivor.models.Issue` from a `github.Issue`."
     params = {}
-    
+
     for issue_attr, github_attr in issue_attr_map.items():
         # Make all attribues as list of attributes
         if not isinstance(github_attr, list):
             github_attr = [github_attr]
-            
-        # Drill done through each attribute in the order given
-        value = github_issue
-        for attr in github_attr:
-            if value:
-                value = getattr(value, attr)
+
+        if issue_attr == 'labels':
+            labels = getattr(github_issue, 'labels')
+            value = [label.name for label in labels]
+        else:
+            # Drill done through each attribute in the order given
+            value = github_issue
+            for attr in github_attr:
+                if value:
+                    value = getattr(value, attr)
         params[issue_attr] = value
-                
+
     issue = Issue(**params)
 
     issue.reporter = get_or_create_user(github_issue.user)
@@ -93,7 +98,7 @@ def sync(types, verbose=False):
                                  repo.get_issues(state='closed'))
         except github.GithubException as e:
             print 'Warn: %s' % e
-            return 
+            return
         for gh_issue in issues:
             print ',',
             try:
@@ -110,6 +115,6 @@ if __name__ == '__main__':
 
     args = argparser.parse_args()
     types = args.model or ('users', 'issues')
-    
+
     init()
     sync(types, args.verbose)
