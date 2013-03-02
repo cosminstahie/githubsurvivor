@@ -73,8 +73,13 @@ def dashboard():
 
     # Create an annonymous function that returns a fresh query set of filtered
     # issue every time it's called
-    filter_issues = lambda: Issue.objects.filter(milestone=milestone,
-                                                 labels__contains=label_name)
+
+    if milestone:
+        filter_issues = lambda: Issue.objects.filter(milestone=milestone)
+    elif label_name:
+        filter_issues = lambda: Issue.objects.filter(labels__contains=label_name)
+    else:
+        filter_issues = lambda: Issue.objects
 
     # Number of bugs opened/closed in each period
     opened_closed_bugs = []
