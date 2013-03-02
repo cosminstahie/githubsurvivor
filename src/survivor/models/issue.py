@@ -13,7 +13,7 @@ class IssueQuerySet(QuerySet):
         return self.only('milestone').distinct('milestone')
 
     def labels(self):
-        return self.only('label_name').distinct('label_name')
+        return self.only('labels').distinct('labels')
 
     def opened_in(self, start, end):
         "Find issues opened in date range."
