@@ -33,7 +33,11 @@
 				<select name="milestone">
 					<option value="">No milestone</options>
                                     {% for milestone in milestones %}
+                                    	{% if milestone == current_milestone %}
+					<option value="{{milestone}}" selected>{{milestone}}</options>
+																			{% else %}
 					<option value="{{milestone}}">{{milestone}}</options>
+																			{% endif %}
                                     {% endfor %}
 				</select>
 
@@ -41,7 +45,11 @@
 				<select name="label">
 					<option value="">No label</options>
                                     {% for label in labels %}
-					<option value="{{label}}">{{label}}</options>
+                                    	{% if label == current_label %}
+						<option value="{{label}}" selected>{{label}}</options>
+																			{% else %}
+						<option value="{{label}}">{{label}}</options>
+																			{% endif %}
                                     {% endfor %}
 				</select>
 

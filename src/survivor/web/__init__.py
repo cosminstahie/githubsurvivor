@@ -110,7 +110,9 @@ def dashboard():
                            opened_closed_bugs=opened_closed_bugs,
                            open_bugs=open_bugs,
                            open_bug_count=open_bugs[-1]['count'],
-                           prev_open_bug_count=open_bugs[-2]['count'])
+                           prev_open_bug_count=open_bugs[-2]['count'],
+                           current_milestone=milestone,
+                           current_label=label_name)
 
 ### Old bugs
 
