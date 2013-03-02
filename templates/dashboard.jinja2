@@ -31,6 +31,7 @@
 			<form method="get">
 				By milestone:
 				<select name="milestone">
+					<option value="">No milestone</options>
                                     {% for milestone in milestones %}
 					<option value="{{milestone}}">{{milestone}}</options>
                                     {% endfor %}
@@ -38,6 +39,7 @@
 
 				By label:
 				<select name="label">
+					<option value="">No label</options>
                                     {% for label in labels %}
 					<option value="{{label}}">{{label}}</options>
                                     {% endfor %}
