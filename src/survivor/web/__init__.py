@@ -37,6 +37,11 @@ def reporting_period(unit, anchor, offset=0):
 
 @app.route('/')
 def dashboard():
+    # Get filters from URL
+    #TODO: Remove default milestone
+    milestone = request.args.get('milestone')
+    label_name = request.args.get('label')
+
     today = timeutils.today()
 
     reporting_unit = request_arg('reporting_unit', default=config['reporting.window'])
@@ -50,8 +55,17 @@ def dashboard():
     # Randomise order of developers with equal bug counts
     # FIXME: show developers as tied in template
     shuffle(developers)
-    num_closed = lambda u: len(u.closed_issues().closed_in(current_period.start,
-                                                           current_period.end))
+
+    closed_issues = lambda u: u.closed_issues().closed_in(current_period.start, current_period.end)
+    if milestone and label_name:
+        num_closed = lambda u: len(closed_issues(u).filter(milestone=milestone, labels__contains=label_name))
+    elif milestone:
+        num_closed = lambda u: len(closed_issues(u).filter(milestone=milestone))
+    elif label_name:
+        num_closed = lambda u: len(closed_issues(u).filter(labels__contains=label_name))
+    else:
+        num_closed = lambda u: len(closed_issues(u))
+
     # Rank from lowest number of closed bugs to highest
     ranked = sorted(((dev, num_closed(dev)) for dev in developers),
                     key=lambda pair: pair[1])
@@ -59,16 +73,30 @@ def dashboard():
     # FIXME: this needs some work.
     # This currently makes 3 * previous_periods (i.e. 36) separate Mongo queries
 
+    # Create an annonymous function that returns a fresh query set of filtered
+    # issue every time it's called
+
+    if milestone and label_name:
+        filter_issues = lambda: Issue.objects.filter(milestone=milestone, labels__contains=label_name)
+    elif milestone:
+        filter_issues = lambda: Issue.objects.filter(milestone=milestone)
+    elif label_name:
+        filter_issues = lambda: Issue.objects.filter(labels__contains=label_name)
+    else:
+        filter_issues = lambda: Issue.objects
+
     # Number of bugs opened/closed in each period
-    opened_closed_bugs = [{'period': period,
-                           'opened': len(Issue.objects.opened_in(period.start, period.end)),
-                           'closed': len(Issue.objects.closed_in(period.start, period.end))}
-                          for period in reporting_periods]
+    opened_closed_bugs = []
+    for period in reporting_periods:
+      opened_closed_bugs.append({'period': period,
+                                 'opened': len(filter_issues().opened_in(period.start, period.end)),
+                                 'closed': len(filter_issues().closed_in(period.start, period.end))})
 
     # Point-in-time open bug count
-    open_bugs = [{'period': period,
-                  'count': len(Issue.objects.open_at(period.end))}
-                 for period in reporting_periods]
+    open_bugs = []
+    for period in reporting_periods:
+      open_bugs.append({'period': period,
+                        'count': len(filter_issues().open_at(period.end))})
 
     # Close rate
     current_close_rate = opened_closed_bugs[-1]['closed'] - opened_closed_bugs[-1]['opened']
@@ -80,11 +108,15 @@ def dashboard():
                            # Context vars
                            today=today,
                            period_label=reporting_unit,
+                           milestones=Issue.objects.milestones(),
+                           labels=Issue.objects.labels(),
                            ranked=ranked,
                            opened_closed_bugs=opened_closed_bugs,
                            open_bugs=open_bugs,
                            open_bug_count=open_bugs[-1]['count'],
-                           prev_open_bug_count=open_bugs[-2]['count'])
+                           prev_open_bug_count=open_bugs[-2]['count'],
+                           current_milestone=milestone,
+                           current_label=label_name)
 
 ### Old bugs
 
