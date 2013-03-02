@@ -50,8 +50,16 @@ def dashboard():
     # Randomise order of developers with equal bug counts
     # FIXME: show developers as tied in template
     shuffle(developers)
-    num_closed = lambda u: len(u.closed_issues().closed_in(current_period.start,
-                                                           current_period.end))
+
+    num_closed_manager = u.closed_issues().closed_in(current_period.start,
+                                                     current_period.end)
+    if milestone:
+        num_closed = lambda u: len(num_closed_manager.filter(milestone=milestone))
+    elif label:
+        num_closed = lambda u : len(num_closed_manager.filter(label=label))
+    else:
+        num_closed = lambda u: len(num_closed_manager)
+
     # Rank from lowest number of closed bugs to highest
     ranked = sorted(((dev, num_closed(dev)) for dev in developers),
                     key=lambda pair: pair[1])
