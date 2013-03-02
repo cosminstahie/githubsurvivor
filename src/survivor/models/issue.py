@@ -44,3 +44,6 @@ class Issue(Document):
     opened = DateTimeField(required=True)
     updated = DateTimeField(required=True)
     url = URLField()
+    milestone_id = IntField(unique=False, required=False)
+    # TODO: Make list
+    label_name = StringField()
