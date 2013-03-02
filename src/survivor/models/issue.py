@@ -46,4 +46,4 @@ class Issue(Document):
     url = URLField()
     #TODO: Make this a reference document
     milestone = StringField()
-    label_name = StringField()
+    labels = ListField()
