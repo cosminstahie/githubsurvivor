@@ -31,14 +31,16 @@
 			<form method="get">
 				By milestone:
 				<select name="milestone">
-					<option value="">None</options>
-					<option value="8">Bugs</options>
+                                    {% for milestone in milestones %}
+					<option value="{{milestone}}">{{milestone}}</options>
+                                    {% endfor %}
 				</select>
 
 				By label:
 				<select name="label">
-					<option value="">None</options>
-					<option value="Critical">Critical</options>
+                                    {% for label in labels %}
+					<option value="{{label}}">{{label}}</options>
+                                    {% endfor %}
 				</select>
 
 				<input type="submit" value="Apply">

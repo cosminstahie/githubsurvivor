@@ -9,6 +9,12 @@ class IssueQuerySet(QuerySet):
     """
     Custom issue queries.
     """
+    def milestones(self):
+        return self.only('milestone').distinct('milestone')
+
+    def labels(self):
+        return self.only('label_name').distinct('label_name')
+
     def opened_in(self, start, end):
         "Find issues opened in date range."
         return self.filter(opened__gt=start, opened__lte=end)
