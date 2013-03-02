@@ -26,6 +26,15 @@
 			</div>
 		</div>
 
+        <div class="filter">
+            <label for="reporting_unit">Last</label>
+            <select id="reporting_unit">
+                <option value="day">Day</value>
+                <option value="week">Week</value>
+                <option value="month">Month</value>
+            </select>
+        </div>
+
 		<!-- Leaderboards -->
 		{% macro leaderboard(id, title, members) %}
 		<div class="leaderboard" id="{{ id }}">
