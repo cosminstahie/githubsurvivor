@@ -81,7 +81,7 @@ def sync(types, verbose=False):
             print 'Warn: %s' % e
             return 
         for gh_issue in issues:
-            print ','
+            print ',',
             try:
                 issue = create_issue(gh_issue)
             except:
