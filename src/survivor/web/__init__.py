@@ -99,6 +99,8 @@ def dashboard():
                            # Context vars
                            today=today,
                            period_label=reporting_unit,
+                           milestones=Issue.objects.milestones(),
+                           labels=Issue.objects.labels(),
                            ranked=ranked,
                            opened_closed_bugs=opened_closed_bugs,
                            open_bugs=open_bugs,
