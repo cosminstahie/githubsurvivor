@@ -26,6 +26,25 @@
 			</div>
 		</div>
 
+		<!-- Filters -->
+		<div id="filters">
+			<form method="get">
+				By milestone:
+				<select name="milestone">
+					<option value="">None</options>
+					<option value="8">Bugs</options>
+				</select>
+
+				By label:
+				<select name="label">
+					<option value="">None</options>
+					<option value="Critical">Critical</options>
+				</select>
+
+				<input type="submit" value="Apply">
+			</div>
+		</div>
+
 		<!-- Leaderboards -->
 		{% macro leaderboard(id, title, members) %}
 		<div class="leaderboard" id="{{ id }}">

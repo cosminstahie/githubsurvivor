@@ -44,4 +44,6 @@ class Issue(Document):
     opened = DateTimeField(required=True)
     updated = DateTimeField(required=True)
     url = URLField()
+    #TODO: Make this a reference document
     milestone = StringField()
+    label_name = StringField()
