@@ -63,10 +63,10 @@ def dashboard():
     label_name = None
 
     # Get filters from URL
-    if request.args.has_key('milestone'):
+    if request.args.has_key('milestone') and request.args['milestone']:
       milestone_id = request.args['milestone']
 
-    if request.args.has_key('label'):
+    if request.args.has_key('label') and request.args['label']:
       label_name = request.args['label']
 
     # Number of bugs opened/closed in each period
