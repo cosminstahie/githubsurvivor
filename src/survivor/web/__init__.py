@@ -37,6 +37,11 @@ def reporting_period(unit, anchor, offset=0):
 
 @app.route('/')
 def dashboard():
+    # Get filters from URL
+    #TODO: Remove default milestone
+    milestone = request.args.get('milestone','SecondMilestone'):
+    label_name = request.args.get('label')
+
     today = timeutils.today()
 
     reporting_unit = request_arg('reporting_unit', default=config['reporting.window'])
@@ -67,21 +72,11 @@ def dashboard():
     # FIXME: this needs some work.
     # This currently makes 3 * previous_periods (i.e. 36) separate Mongo queries
 
-    milestone_id = None
-    label_name = None
-
-    # Get filters from URL
-    if request.args.has_key('milestone') and request.args['milestone']:
-      milestone_id = request.args['milestone']
-
-    if request.args.has_key('label') and request.args['label']:
-      label_name = request.args['label']
-
     # Number of bugs opened/closed in each period
     opened_closed_bugs = []
     for period in reporting_periods:
       # Filter subset by URL filters before filtering by period
-      filtered_issues = Issue.objects.filter(milestone_id=milestone_id,
+      filtered_issues = Issue.objects.filter(milestone=milestone,
                                              label_name=label_name)
       opened_closed_bugs.append({'period': period,
                                  'opened': len(filtered_issues.opened_in(period.start, period.end)),
@@ -91,7 +86,7 @@ def dashboard():
     open_bugs = []
     for period in reporting_periods:
       # Filter subset by URL filters before filtering by period
-      filtered_issues = Issue.objects.filter(milestone_id=milestone_id,
+      filtered_issues = Issue.objects.filter(milestone=milestone,
                                              label_name=label_name)
       open_bugs.append({'period': period,
                         'count': len(filtered_issues.open_at(period.end))})
