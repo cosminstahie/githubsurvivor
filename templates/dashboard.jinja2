@@ -26,6 +26,16 @@
 			</div>
 		</div>
 
+        <div class="filter">
+            <input type="hidden" value="{{period_label}}" id="hid_reporting_unit" />
+            <span for="reporting_unit">Current: </span>
+            <select id="reporting_unit">
+                <option value="sprint">Sprint</value>
+                <option value="week">Week</value>
+                <option value="month">Month</value>
+            </select>
+        </div>
+
 		<!-- Leaderboards -->
 		{% macro leaderboard(id, title, members) %}
 		<div class="leaderboard" id="{{ id }}">
