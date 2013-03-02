@@ -44,7 +44,7 @@ def dashboard():
 
     reporting_periods = [reporting_period(reporting_unit, today, -i)
                          for i in reversed(xrange(previous_periods))]
-    current_period = reporting_periods[-2]
+    current_period = reporting_periods[-1]
 
     developers = User.objects.competitors()
     # Randomise order of developers with equal bug counts
