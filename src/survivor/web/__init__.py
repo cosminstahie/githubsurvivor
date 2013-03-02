@@ -39,7 +39,7 @@ def reporting_period(unit, anchor, offset=0):
 def dashboard():
     # Get filters from URL
     #TODO: Remove default milestone
-    milestone = request.args.get('milestone','SecondMilestone'):
+    milestone = request.args.get('milestone','SecondMilestone')
     label_name = request.args.get('label')
 
     today = timeutils.today()
@@ -56,14 +56,12 @@ def dashboard():
     # FIXME: show developers as tied in template
     shuffle(developers)
 
-    num_closed_manager = u.closed_issues().closed_in(current_period.start,
-                                                     current_period.end)
     if milestone:
-        num_closed = lambda u: len(num_closed_manager.filter(milestone=milestone))
+        num_closed = lambda u: len(u.closed_issues().closed_in(current_period.start, current_period.end).filter(milestone=milestone))
     elif label:
-        num_closed = lambda u : len(num_closed_manager.filter(label=label))
+        num_closed = lambda u : len(u.closed_issues().closed_in(current_period.start, current_period.end).filter(label=label))
     else:
-        num_closed = lambda u: len(num_closed_manager)
+        num_closed = lambda u: len(u.closed_issues().closed_in(current_period.start, current_period.end))
 
     # Rank from lowest number of closed bugs to highest
     ranked = sorted(((dev, num_closed(dev)) for dev in developers),
